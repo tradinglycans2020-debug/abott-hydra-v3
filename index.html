@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABOTT a Hydra - Robô de Trading Autônomo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #d4af37;
+            --dark-blue: #1a3a52;
+            --light-blue: #2d5a7b;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --dark-gray: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            background: var(--white);
+        }
+
+        /* Header/Navbar */
+        header {
+               background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            color: var(--white);
+            margin-left: 2rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, #16213e 100%);
+            color: var(--white);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            color: var(--gold);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-text p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: var(--dark-blue);
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid var(--gold);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+            padding: 80px 20px;
+        }
+
+        .pricing-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border-top: 4px solid var(--gold);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .pricing-card.featured {
+            border-top: 4px solid var(--gold);
+            position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: 'MAIS POPULAR';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gold);
+            color: var(--dark-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .pricing-header {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--light-blue) 100%);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .pricing-header h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .pricing-header .subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .pricing-body {
+            padding: 30px;
+        }
+
+        .price {
+            font-size: 2.5em;
+            color: var(--gold);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .price-period {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .period-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--gold);
+            background: var(--white);
+            color: var(--dark-blue);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .period-btn:hover {
+            background: var(--gold);
+            color: var(--dark-blue);
+        }
+
+        .period-btn.active {
+            background: var(--gold);
+            color: var(--dark-blue);
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .features-list li:before {
+            content: '✓ ';
+            color: var(--gold);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-footer {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+
+        .checkout-button {
+            display: block;
+            width: 100%;
+            background: var(--gold);
+            color: var(--dark-blue);
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .checkout-button:hover {
+            background: var(--dark-blue);
+            color: var(--gold);
+            transform: scale(1.02);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .testimonial-card p {
+            color: #666;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: var(--dark-blue);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--gold);
+            text-decoration: none;
+            margin: 0 20px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            padding-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--gold) 0%, #c9a961 100%);
+            color: var(--dark-blue);
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 2em;
+            }
+
+            .section-title {
+                font-size: 1.8em;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .pricing-card.featured::before {
+                display: none;
+            }
+
+            .hero {
+                padding: 40px 20px;
+            }
+
+            .features {
+                margin: 40px auto;
+            }
+
+            .pricing {
+                padding: 40px 20px;
+            }
+
+            .period-selector {
+                gap: 5px;
+            }
+
+            .period-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">ABOTT a Hydra</div>
+            <nav>
+                <a href="#features">Recursos</a>
+                <a href="#pricing">Planos</a>
+                <a href="#testimonials">Depoimentos</a>
+                <a href="#contact">Contato</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>ABOTT a Hydra</h1>
+                <p>Robô de Trading Autônomo com Múltiplas Estratégias</p>
+  <p style="font-size: 1.1em; opacity: 0.9;">Zero emoção, zero erro humano, bora lucrar de verdade!</p>
+            </div>
+            <div class="hero-image">
+                <img src="connectgain-abott.jpg" alt="ABOTT a Hydra - ConnectGain">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Por Que Escolher ABOTT a Hydra?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Precisão +70%</h3>
+                <p>Estratégia própria com mais de 70% de acertividade nas entradas.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Gerenciamento de Risco</h3>
+                <p>Gerenciamento exclusivo e profissional.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">😎</div>
+                <h3>Disciplina Total</h3>
+                O ABOTT opera enquanto você curte a família, viaja, trabalha e desfruta da vida.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Totalmente Hands-Off</h3>
+                <p>Configura uma vez depois basta deixar rodando todos os dias.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Zero Erro Humano</h3>
+                <p>Sem emoções, sem indecisões, sem erros de execução manual.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💵</div>
+                <h3>Ativo Dólar B3</h3>
+               <p>Operando exclusivamente no ativo Dólar na B3 buscando a máxima eficiência.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍💻</div>
+                <h3>Suporte Direto</h3>
+               <p>Acesso direto com os desenvolvedores e atendimento personalizado.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Atualizações Contínuas</h3>
+                <p>Novas estratégias e melhorias para planos vitalícios sem custo adicional.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-content">
+            <h2 class="section-title">Escolha Seu Plano</h2>
+            
+            <div class="promo-banner">
+                🎁 OFERTA ESPECIAL DE LANÇAMENTO: 01/12/25 à 15/12/2025
+                <br/>Os 50 primeiros que adquirirem plano Vitalício concorrem ao sorteio de um iPhone 16 128gb novo lacrado!
+            </div>
+
+            <div class="pricing-grid">
+                <!-- SOLO Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>SOLO</h3>
+                        <div class="subtitle">2 Operações sendo 1 na Abertura</div>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="period-selector">
+                            <button class="period-btn active" onclick="updatePrice('solo', 'mensal')">Mensal</button>
+                            <button class="period-btn" onclick="updatePrice('solo', 'trimestral')">Trimestral</button>
+                            <button class="period-btn" onclick="updatePrice('solo', 'anual')">Anual</button>
+                            <button class="period-btn" onclick="updatePrice('solo', 'vitalicio')">Vitalício</button>
+                        </div>
+                        <div class="price" id="solo-price">R$ 297,00<span style="font-size: 0.4em;">/mês</span></div>
+                        <div class="price-period" id="solo-period">Pagamento Mensal</div>
+                        <ul class="features-list">
+                            <li>2 Operações sendo 1 na Abertura</li>
+                            <li>Estratégia consistente</li>
+                            <li>Suporte via WhatsApp ou Telegram</li>
+                            <li>Atualizações futuras apenas no plano vitalício</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="https://pay.cakto.com.br/37suobq" class="checkout-button" id="solo-checkout">Comprar Agora</a>
+                    </div>
+                </div>
+
+                <!-- ALPHA Plan -->
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3>ALPHA</h3>
+                        <div class="subtitle">6 Operações incluíndo Abertura</div>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="period-selector">
+                            <button class="period-btn active" onclick="updatePrice('alpha', 'mensal')">Mensal</button>
+                            <button class="period-btn" onclick="updatePrice('alpha', 'trimestral')">Trimestral</button>
+                            <button class="period-btn" onclick="updatePrice('alpha', 'anual')">Anual</button>
+                            <button class="period-btn" onclick="updatePrice('alpha', 'vitalicio')">Vitalício</button>
+                        </div>
+                        <div class="price" id="alpha-price">R$ 399,00<span style="font-size: 0.4em;">/mês</span></div>
+                        <div class="price-period" id="alpha-period">Pagamento Mensal</div>
+                        <ul class="features-list">
+                            <li>6 operações</li>
+                            <li>Estratégia de abertura e pós abertura</li>
+                            <li>Suporte prioritário</li>
+                            <li>Atualizações futuras apenas no plano vitalício</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="https://pay.cakto.com.br/68r9fj5" class="checkout-button" id="alpha-checkout">Comprar Agora</a>
+                    </div>
+                </div>
+
+                <!-- OMEGA Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>OMEGA</h3>
+                        <div class="subtitle">6 Operações Pós Abertura </div>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="period-selector">
+                            <button class="period-btn active" onclick="updatePrice('omega', 'mensal')">Mensal</button>
+                            <button class="period-btn" onclick="updatePrice('omega', 'trimestral')">Trimestral</button>
+                            <button class="period-btn" onclick="updatePrice('omega', 'anual')">Anual</button>
+                            <button class="period-btn" onclick="updatePrice('omega', 'vitalicio')">Vitalício</button>
+                        </div>
+                         <div class="price" id="omega-price">R$ 399,00<span style="font-size: 0.4em;">/mês</span></div>
+                        <div class="price-period" id="omega-period">Pagamento Mensal</div>
+                        <ul class="features-list">
+                            <li>6 operações</li>
+                            <li>Estratégia de pós abertura</li>
+                            <li>Suporte prioritário</li>
+                            <li>Atualizações futuras apenas no plano vitalício</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="https://pay.cakto.com.br/97ni6ki" class="checkout-button" id="omega-checkout">Comprar Agora</a>
+                    </div>
+                </div>
+
+                <!-- ABOTT Plan (Featured)  -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>ABOTT</h3>
+                        <div class="subtitle">12 Operações (Alpha + Omega)</div>
+                    </div>
+                    <div class="pricing-body">
+                        <div class="period-selector">
+                            <button class="period-btn active" onclick="updatePrice('abott', 'mensal')">Mensal</button>
+                            <button class="period-btn" onclick="updatePrice('abott', 'trimestral')">Trimestral</button>
+                            <button class="period-btn" onclick="updatePrice('abott', 'anual')">Anual</button>
+                            <button class="period-btn" onclick="updatePrice('abott', 'vitalicio')">Vitalício</button>
+                        </div>
+                         <div class="price" id="abott-price">R$ 697,00<span style="font-size: 0.4em;">/mês</span></div>
+                        <div class="price-period" id="abott-period">Pagamento Mensal</div>
+                        <ul class="features-list">
+                            <li>12 operações entre 9:00 - 10:30am</li>
+                            <li>Estratégia de Abertura + Pós abertura</li>
+                            <li>Máxima diversificação</li>
+                            <li>Suporte VIP 24/7</li>
+                           <li>Atualizações futuras apenas no plano vitalício</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-footer">
+                        <a href="https://pay.cakto.com.br/hfeqd7y" class="checkout-button" id="abott-checkout">Comprar Agora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <h2 class="section-title">O Que Nossos Clientes Dizem</h2>
+        <div class="testimonials-grid">
+           <!-- <div class="testimonial-card">
+                <p>"O ABOTT a Hydra transformou minha forma de operar. Com múltiplas estratégias rodando, meu retorno aumentou significativamente!"</p>
+                <div class="testimonial-author">- João Silva, Trader</div>
+            </div> -->
+            <div class="testimonial-card">
+                <p>"Oi, pessoal!
+					Vim dar meu depoimento sobre os robôs.
+
+					Comprei o combo com 6 estratégias.
+					Hoje foram 6 gains.
+					As 6 entraram, em momentos diferentes, e todas foram pro gain.
+					A que demorou mais levou 4m23s.
+					Uma fechou em 5s.
+
+					Eu gostei muito por elas entrarem apenas uma vez.
+					Não fico me preocupando em acompanhar e ver se entrarão novamente do lado certo.
+					Me deixou bem mais tranquila.
+
+					Por hora é isso!
+
+					À medida que for usando, vou atualizando aqui.
+
+					Em um dia de uso quase paguei a mensalidade."</p>
+                <div class="testimonial-author">- Lerida de Lima, Investidora</div>
+            </div>
+          <!--  <div class="testimonial-card">
+                <p>"A diversificação que o ABOTT oferece é incomparável. Sinto-me seguro deixando o robô operar enquanto trabalho em outras coisas."</p>
+                <div class="testimonial-author">- Carlos Oliveira, Empreendedor</div>
+            </div>-->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h3 style="color: var(--gold); margin-bottom: 20px;">Pronto para Começar?</h3>
+            <p style="margin-bottom: 20px;">Entre em contato conosco para mais informações!</p>
+            <div class="footer-links">
+                <a href="https://wa.me/5531997502406">WhatsApp: (31) 99750-2406</a>
+                <a href="mailto:janimarvale@hotmail.com">Email: janimarvale@hotmail.com</a>
+				<a href="https://t.me/+7MlW-4LdiW82ZTEx">Telegram: ConnectGain/ABOTT a Hydra - Robôs/Automações</a>
+				
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 ABOTT a Hydra. Todos os direitos reservados.</p>
+                <p>Período de Lançamento: 01/12/25 à 31/12/2025</p>
+               <!-- <p style="margin-top: 10px; font-size: 0.85em;">Os 50 primeiros que adquirirem qualquer plano Vitalício concorrem ao sorteio de um iPhone 16 128gb preto lacrado na caixa.</p> -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dados de preços para cada plano
+        const priceData = {
+            solo: {
+                mensal: { price: 'R$ 297,00', period: 'Pagamento Mensal', checkout: 'https://pay.cakto.com.br/37suobq' },
+                trimestral: { price: 'R$ 759,00', period: 'Pagamento Trimestral', checkout: 'https://pay.cakto.com.br/eksmcd4' },
+                anual: { price: 'R$ 2.604,00', period: 'Pagamento Anual', checkout: 'https://pay.cakto.com.br/36syjdn' },
+                vitalicio: { price: 'R$ 6.591,00', period: 'Acesso Vitalício', checkout: 'https://pay.cakto.com.br/444y4v6' }
+            },
+            alpha: {
+                mensal: { price: 'R$ 399,00', period: 'Pagamento Mensal', checkout: 'https://pay.cakto.com.br/68r9fj5' },
+                trimestral: { price: 'R$ 1.077,00', period: 'Pagamento Trimestral', checkout: 'https://pay.cakto.com.br/e8628nv' },
+                anual: { price: 'R$ 3.588,00', period: 'Pagamento Anual', checkout: 'https://pay.cakto.com.br/3d8xbqt' },
+                vitalicio: { price: 'R$ 9.999,00', period: 'Acesso Vitalício', checkout: 'https://pay.cakto.com.br/aq8d9jc' }
+            },
+            omega: {
+                mensal: { price: 'R$ 399,00', period: 'Pagamento Mensal', checkout: 'https://pay.cakto.com.br/97ni6ki' },
+                trimestral: { price: 'R$ 1.077,00', period: 'Pagamento Trimestral', checkout: 'https://pay.cakto.com.br/dsgjesc' },
+                anual: { price: 'R$ 3.588,00', period: 'Pagamento Anual', checkout: 'https://pay.cakto.com.br/utt4kk6' },
+                vitalicio: { price: 'R$ 9.999,00', period: 'Acesso Vitalício', checkout: 'https://pay.cakto.com.br/tr9ay3w' }
+            },
+            abott: {
+                mensal: { price: 'R$ 697,00', period: 'Pagamento Mensal', checkout: 'https://pay.cakto.com.br/hfeqd7y' },
+                trimestral: { price: 'R$ 2.034,00', period: 'Pagamento Trimestral', checkout: 'https://pay.cakto.com.br/af8muz4' },
+                anual: { price: 'R$ 7.188,00', period: 'Pagamento Anual', checkout: 'https://pay.cakto.com.br/snaxpwn' },
+                vitalicio: { price: 'R$ 17.472,00', period: 'Acesso Vitalício', checkout: 'https://pay.cakto.com.br/wam38yr' }
+            }
+        };
+
+        function updatePrice(plan, period) {
+            // Atualizar botões ativos
+            const buttons = document.querySelectorAll(`.pricing-card:has(#${plan}-price) .period-btn`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Atualizar preço e link
+            const data = priceData[plan][period];
+            document.getElementById(`${plan}-price`).innerHTML = `${data.price}<span style="font-size: 0.4em;">/${period === 'vitalicio' ? 'Vitalício' : 'período'}</span>`;
+            document.getElementById(`${plan}-period`).textContent = data.period;
+            document.getElementById(`${plan}-checkout`).href = data.checkout;
+        }
+    </script>
+</body>
+</html>
